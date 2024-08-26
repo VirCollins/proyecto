@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png"
+        href="https://i.pinimg.com/originals/4c/bd/d3/4cbdd34a362dcfcab31453076ce26d44.png">
+    <title>Tarea</title>
+    <link rel="stylesheet" type="text/css" href="css/estilos.css">
+    <link rel="stylesheet" type="text/css" href="css/estiloTabla.css">
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <div class="imgaen">
+                <img src="https://seeklogo.com/images/M/marvel-comics-logo-31D9B4C7FB-seeklogo.com.png" alt="marvel">
+            </div>
+            <nav class="cabezado">
+                <a href="index.html">Inicio</a>
+                <a href="cartelera.html">Cartelera</a>
+                <a href="promocion.html">Promoción</a>
+                <a href="about.html">¿Quienes somos?</a>
+                <a href="listado.html">Listado</a>
+                <a href="cargar.html">Subir Archivos</a>
+                <a href="login.html" class="cabezado_elemento_rigth">Login</a>
+            </nav>           
+        </div>
+      <div class="datos">
+        <form>
+            <fieldset><legend>Datos Personales</legend>
+                <div>
+                    <label for="Id">Id:</label>
+                    <input type="text" id="Id" name="Id" disabled/>
+                </div>
+                <br>
+                <div>
+                    <label for="Nombre">Nombre:</label>
+                    <input type="text" id="Nombre" name="Nombre" required/>
+                </div>
+                <br>
+                <div>
+                    <label for="Apellido">Apellido:</label>
+                    <input type="text" id="Apellido" name="Apellido" required/>
+                </div>
+                <br>
+                <div>
+                    <label for="Edad">Edad:</label>
+                    <input type="text" id="Edad" name="Edad" required/>
+                </div>
+                <br>
+                <div>
+                    <label for="Genero">Genero:</label>
+                    <input type="text" id="Genero" name="Genero" required/>
+                </div>
+                <br>
+                <div>
+                    <label for="Numero_Telefono">Numero de Telefono:</label>
+                    <input type="text" id="Numero_Telefono" name="Numero_Telefono" required/>
+                </div>
+                <br>
+            </fieldset>
+            <br>
+            <div id="contenedor-error"></div>
+            <button type="submit">Crear</button>
+            <script>
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+                const mode = urlParams.get('Mode');
+                //console.log(mode);
+                const token = localStorage.getItem('token');
+                console.log(token);
+                if(!token){
+                    window.location.href = '/login.html';
+                }
+    
+                const URL = 'http://localhost:3000/ProyectoMarvel/'+id;
+                const form = document.querySelector('form');
+                let IdInput = document.querySelector('#Id');
+                let nombreInput = document.querySelector('#Nombre');
+                let apellidoInput = document.querySelector('#Apellido');
+                let edadInput = document.querySelector('#Edad');
+                let generoInput = document.querySelector('#Genero');
+                let numeroInput = document.querySelector('#Numero_Telefono');
+                let contedorError = document.querySelector('#contenedor-error');
+    
+                let MetodoHTTP = '';
+                if(mode === 'INS'){
+                    MetodoHTTP = 'POST';
+                }
+                if(mode === 'UPD'){
+                    MetodoHTTP = 'PUT';
+                }
+                if(mode === 'DLT'){
+                    MetodoHTTP = 'DELETE';
+                }
+    
+    
+                if(mode === 'INS' || mode === 'UPD' || mode == 'DLT'){
+                    form.addEventListener('submit', e => {
+                        e.preventDefault();
+                        const nombre = nombreInput.value;
+                        const apellido = apellidoInput.value;
+                        const edad = edadInput.value;
+                        const genero = generoInput.value;
+                        const numero_telefono = numeroInput.value;
+                        fetch(URL,{
+                            method: MetodoHTTP,
+                            headers: {
+                                'content-type': 'application/json',
+                                'Authorization': 'Bearer ' + token
+                            },
+                            body: JSON.stringify({nombre, apellido, edad, genero, numero_telefono})
+                        }).then(response => {
+                            if(!response.ok){
+                                throw new Error('La respuesta no fue correcta');
+                            }
+                            return response.json();
+                        }).then(data => {
+                            window.location.href = '/listado.html';
+                        }).catch(error =>{
+                            console.log('Error ', error);
+                            contedorError.textContent = 'Usuario o contraseña incorrecta';
+                        });
+                    })
+                }
+    
+                if(mode === 'UPD' || mode == 'DLT'){
+                    fetch(URL)
+                    .then(function(response){
+                        if(response.ok){
+                            return response.json();
+                        }
+                        throw new Error('La respuesta no es satisfactoria');
+                    }).then(function(data){
+                        IdInput.value = data._id;
+                        nombreInput.value = data.nombre;
+                        apellidoInput.value = data.apellido;
+                        edadInput.value = data.edad;
+                        generoInput.value = data.genero;
+                        numeroInput.value = data.numero_telefono;
+    
+                    }).catch(error =>{
+                        console.log('Error ', error);
+                        contedorError.textContent = 'Usuario o contraseña incorrecta';
+                    });
+                }
+    
+            </script>
+          </form> 
+      </div>   
+      <div class="DerechoColumn">
+            <div class=" card cardDerecho">
+                <img src="https://i.pinimg.com/736x/ac/64/37/ac64379c52b7998e12a47d0ea8e3cf79.jpg"  alt="">
+            </div>
+        </div>
+        <footer>
+            <div class="frase">
+                <h1>"Si estás interesado en lo que haces, ¡eso te hace seguir continuando!".</h1>
+                <h2>Stan Lee</h2>
+            </div>
+            <div class="redes">
+                <a href="https://www.facebook.com/"><img src="https://cdn-icons-png.flaticon.com/512/1312/1312139.png"/></a>
+                <a href="https://www.youtube.com/"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670209.png"/></a>
+                <a href="https://www.twitter.com/"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670211.png"/></a>
+                <a href="https://www.instagram.com/"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670125.png"/></a>
+                </div>
+                <div id="Derechos">
+                    <h4>&copy;Arturo Collins-201910020173 & Juliany Amador - 202010060410</h4>    
+                </div>   
+            </footer>        
+    </div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png"
+        href="https://i.pinimg.com/originals/4c/bd/d3/4cbdd34a362dcfcab31453076ce26d44.png">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/estilos.css">
+    <link rel="stylesheet" type="text/css" href="css/estiloTabla.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="menu">
+            <div class="imgaen">
+                <img src="https://seeklogo.com/images/M/marvel-comics-logo-31D9B4C7FB-seeklogo.com.png" alt="marvel">
+            </div>
+            <nav class="cabezado">
+                <a href="index.html">Inicio</a>
+                <a href="cartelera.html">Cartelera</a>
+                <a href="promocion.html">Promoción</a>
+                <a href="about.html">¿Quienes somos?</a>
+                <a href="listado.html">Listado</a>
+                <a href="cargar.html">Subir Archivos</a>
+                <a href="login.html" class="cabezado_elemento_rigth">Login</a>
+            </nav>            
+        </div><br>
+        <main class="table" id="customers_table">
+            <section class="table__header">
+                <h1>Listado</h1>
+            </section>
+            <div class="ins">
+                <a href="/form.html?Mode=INS&id=">Insertar Dato</a>
+            </div>
+            <section class="table__body">
+                <table id="miTabla">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Edad</th>
+                            <th>Genero</th>
+                            <th>Numero de telefono</th>
+                            <th>Actualizar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </section>
+            <script>
+                fetch('http://localhost:3000/ProyectoMarvel')
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('La respuesta no fue satisfactoria');
+                    }).then(function (data) {
+                        let tableBody = document.querySelector('#miTabla tbody');
+                        console.log(data);
+                        data.forEach(function (item) {
+                            let row = tableBody.insertRow();
+                            row.insertCell().textContent = item._id;
+                            row.insertCell().textContent = item.nombre;
+                            row.insertCell().textContent = item.apellido;
+                            row.insertCell().textContent = item.edad;
+                            row.insertCell().textContent = item.genero;
+                            row.insertCell().textContent = item.numero_telefono;
+
+                            let linkCellUpdate = row.insertCell();
+                            let linkUpdate = document.createElement('a');
+                            linkUpdate.href = '/form.html?Mode=UPD&id=' + item._id;
+                            linkUpdate.textContent = 'Actualizar Registro';
+                            linkUpdate.classList.add('actualizar');
+                            linkCellUpdate.appendChild(linkUpdate);
+
+                            let linkCellDelete = row.insertCell();
+                            let linkDelete = document.createElement('a');
+                            linkDelete.href = '/form.html?Mode=DLT&id=' + item._id;
+                            linkDelete.textContent = 'Eliminar Registro';
+                            linkDelete.classList.add('eliminar');
+                            linkCellDelete.appendChild(linkDelete);
+
+                        });
+                    }).catch(function (error) {
+                        console.log(error);
+                    })
+            </script>
+            
+           <script src="javascript/LinkPagina.js"></script> 
+        </main>
+     </div>   
+</body>
+
+</html>

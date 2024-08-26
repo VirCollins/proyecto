@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://i.pinimg.com/originals/4c/bd/d3/4cbdd34a362dcfcab31453076ce26d44.png">
+    <title>Tarea</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/estilologin.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="principal">volver a la pagina principal</a>
+       <div class="card">
+            <div  class="card-header"><h1>Login</h1></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="Email">Email:</label>
+                    <input type="text" id="email" class="form-control" name="email" required/>
+                </div>
+                    <br/>
+                <div class="form-group">
+                    <label for="Password">Password:</label>
+                    <input type="password" id="Password" class="form-control" name="Password" required/>
+                </div>
+                <a href="signup.html">Entrar a signup</a> <br><br>
+                <div id="contenedor-error"></div>
+                <button type="submit" class="btn btn-primary">Iniciar Sesion</button>
+            </form>    
+       </div>
+    </div>
+    <script>
+        const form = document.querySelector('form');
+        const emailInput = document.querySelector('#email');
+        const passwordInput = document.querySelector('#Password');
+        const contedorError = document.querySelector('#contenedor-error');
+
+        form.addEventListener('submit', e=>{
+            e.preventDefault();
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            console.log
+            fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {'content-type': 'application/json'},
+                body: JSON.stringify({email, password})
+            }).then(response => {
+                if(!response.ok){
+                    throw new Error('La respuesta no fue correcta');
+                }
+                return response.json();
+            }).then(data => {
+                localStorage.setItem('token', data.token);
+                window.location.href = '/listado.html';
+            }).catch(error =>{
+                console.log('Error ', error);
+                contedorError.textContent = 'Usuario o contraseña incorrecta';
+            });
+
+        });
+
+    </script>   
+</body>
+</html>
